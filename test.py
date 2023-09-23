@@ -5,11 +5,13 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 from selenium.common.exceptions import NoSuchElementException
+from selenium.webdriver.support.ui import Select
 
 class interpark:
     id = 'johoon4687'
     pw = 'Hhtad9134@'
     goodsCode = '23006740'
+    wantDate = '20230926'
 
     def __init__(self):
         self.driver = webdriver.Chrome()
@@ -48,13 +50,25 @@ class interpark:
         self.driver.find_element(By.XPATH, "//*[@id='productSide']/div/div[2]/a[1]").click()
 
         # 예매하기 눌러서 새창이 뜨면 포커스를 새창으로 변경
+        print("count is ", self.driver.window_handles.count)
+        time.sleep(10)
+        # TODO
+        # time sleep for typing string refactoring
+
         self.driver.switch_to.window(self.driver.window_handles[1])
-        self.driver.switch_to.frame(self.driver.find_element(By.XPATH, "//*[@id='ifrmSeat']"))
-        chapchaText = self.driver.find_element(By.ID, 'txtCaptcha')
-        chapchaText.send_keys(input())
+        self.driver.get_window_position(self.driver.window_handles[1])
+        # self.driver.switch_to.frame(self.driver.find_element(By.XPATH, "//*[@id='ifrmSeat']"))
+        # chapchaText = self.driver.find_element(By.ID, 'txtCaptcha')
+        # chapchaText.send_keys('ABCDEF')
 
     def lets_reserve(self):
-        self.driver.get_window_position(self.driver.window_handles[1])
+        # 날짜 아이프레임
+        self.driver.switch_to.frame(self.driver.find_element(By.XPATH, "//*[@id='ifrmSeat']"))
+
+        # 월 체크
+        reserveDate = self.driver.find_element(By.XPATH, "//*[@id='PlayDate']")
+        select = Select(reserveDate)
+        select.select_by_value(self.wantDate)
 
 stuff = interpark()
 stuff.login()
